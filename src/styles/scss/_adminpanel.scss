@@ -1,0 +1,16 @@
+/* Ensuring the button has no underline */
+.adminbutton {
+  text-decoration: none !important;
+  font-size: 18px; /* Adjust font size */
+  padding: 10px 20px; /* Adjust padding for button size */
+  border-radius: 10px; /* Optional: Adds a rounded edge to the buttons */
+}
+
+/* Remove underline from links that wrap buttons */
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}

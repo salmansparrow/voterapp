@@ -1,0 +1,6 @@
+nic number
+name
+vote number
+book number
+
+searching with ( nic number )

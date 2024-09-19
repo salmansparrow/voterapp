@@ -1,0 +1,62 @@
+// manageuser.scss
+
+.table {
+  width: 100%;
+  overflow-x: auto; // Allow horizontal scrolling on small screens
+}
+
+// Center-align text in table headers and cells
+th,
+td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+// Ensure proper spacing in form groups
+.form-group {
+  margin-bottom: 1rem; // Adjust spacing between labels and inputs
+}
+
+// Label styling for form groups
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem; // Space between label and input
+}
+
+// Container for editing fields
+.edit-container {
+  display: flex;
+  flex-direction: column;
+}
+
+// Make sure inputs take full width on small screens
+.edit-container .form-group {
+  margin-bottom: 1rem; // Spacing between form groups
+}
+
+// Styling for input fields in the edit container
+.edit-container .form-group input {
+  width: 100%; // Full width for input fields
+}
+
+// Responsive styling for buttons
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}
+
+// Adjust button margins for smaller screens
+.button-container .btn {
+  margin-bottom: 0.5rem;
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+  }
+}

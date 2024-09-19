@@ -1,0 +1,102 @@
+.search-voter {
+  padding: 2rem;
+
+  &-form {
+    margin-bottom: 1rem;
+  }
+
+  &-input {
+    font-size: 1rem;
+    @media (max-width: 767px) {
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 0.75rem;
+    }
+  }
+
+  &-table-container {
+    overflow-x: auto;
+
+    .search-voter-table {
+      th,
+      td {
+        text-align: center;
+        padding: 0.5rem;
+
+        @media (max-width: 767px) {
+          font-size: 0.875rem;
+        }
+
+        @media (max-width: 576px) {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+
+  &-loading,
+  &-error,
+  &-no-results {
+    text-align: center;
+    font-size: 1.25rem;
+  }
+
+  .pagination {
+    margin-top: 1rem;
+    justify-content: center;
+
+    .page-item {
+      &.disabled {
+        pointer-events: none;
+        opacity: 0.6;
+      }
+
+      &.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+      }
+
+      .page-link {
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        @media (max-width: 767px) {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+// Additional mobile responsiveness
+@media (max-width: 767px) {
+  .search-voter {
+    padding: 1rem;
+
+    .search-voter-form {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .search-voter {
+    .search-voter-form {
+      margin-bottom: 0.5rem;
+    }
+
+    .search-voter-input {
+      font-size: 0.75rem;
+    }
+
+    .pagination {
+      .page-link {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
