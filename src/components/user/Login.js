@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "@/features/auth/authSlice";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa"; // Icons for social media
+import { Form, FormGroup, Label, Input, Button, Row, Col } from "reactstrap";
+import Link from "next/link";
 
 function LoginPage() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false); // State for "Remember Me" checkbox
   const [error, setError] = useState(null);
-  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    setError(null); // Reset error before login attempt
+    setError(null); // Clear any previous errors
 
     try {
       const response = await fetch("/api/login", {
@@ -18,51 +25,115 @@ function LoginPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, rememberMe }),
       });
 
       const data = await response.json();
 
-      console.log(data);
-
       if (response.ok) {
-        // Save the JWT token in localStorage or cookies
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify({ email })); // Store user data
-
-        // Redirect to the homepage or dashboard
-        router.push("/");
+        const { token, user } = data;
+        dispatch(loginSuccess({ token, user }));
+        router.push("/"); // Redirect after successful login
       } else {
-        // Handle login errors
-        setError(data.message || "Invalid credentials");
+        setError(data.message || "Login failed");
       }
-    } catch (error) {
-      console.error("Error during login:", error);
-      setError("An error occurred during login");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An error occurred during login.");
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="login-container d-flex justify-content-center align-items-center vh-100 bg-body-tertiary">
+      <div
+        className="login-form p-4 shadow bg-white rounded"
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+          background: "linear-gradient(90deg, #007bff, #00d4ff)",
+        }}
+      >
+        <h2 className="text-center mb-4">Sign In</h2>
+
+        {/* Display error if any */}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <Form onSubmit={handleLogin}>
+          <FormGroup>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Controlled input for email
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Controlled input for password
+              required
+            />
+          </FormGroup>
+
+          <FormGroup check className="mb-3">
+            <Label check>
+              <Input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+              />{" "}
+              Remember Me
+            </Label>
+          </FormGroup>
+
+          <Button color="primary" block type="submit" className="mb-3">
+            Sign In
+          </Button>
+
+          <p className="text-center">
+            Not a user?{" "}
+            <Link href="/contactus" className="text-black">
+              Contact Us
+            </Link>
+          </p>
+
+          <p className="text-center">Email: truesalman7@gmail.com </p>
+
+          <div className="social-icons d-flex justify-content-center mt-3">
+            <Link href="https://facebook.com" target="_blank" className="me-3">
+              <FaFacebook size={30} color="#3b5998" />
+            </Link>
+            <Link href="https://instagram.com" target="_blank" className="me-3">
+              <FaInstagram size={30} color="#E4405F" />
+            </Link>
+            <Link href="https://linkedin.com" target="_blank">
+              <FaLinkedin size={30} color="#0077B5" />
+            </Link>
+          </div>
+        </Form>
+      </div>
+
+      <style jsx>{`
+        .login-container {
+          background-color: #f8f9fa;
+        }
+        .login-form {
+          width: 100%;
+          max-width: 400px;
+        }
+        .social-icons a {
+          text-decoration: none;
+          color: inherit;
+        }
+      `}</style>
     </div>
   );
 }

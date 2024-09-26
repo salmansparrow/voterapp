@@ -30,7 +30,6 @@ function MainNavbar() {
     // Clear the token and user info from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
     // Redirect to the login page
     router.push("/user/login");
   };

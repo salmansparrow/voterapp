@@ -28,6 +28,10 @@ function ManageVoters() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editVoter, setEditVoter] = useState(null);
 
+  // Delete dialog state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [voterToDelete, setVoterToDelete] = useState(null);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -66,16 +70,25 @@ function ManageVoters() {
     setEditDialogOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  // Open the delete confirmation dialog
+  const handleDeleteConfirmation = (voter) => {
+    setVoterToDelete(voter);
+    setDeleteDialogOpen(true);
+  };
+
+  // Confirm deletion
+  const handleDelete = async () => {
     try {
-      const response = await fetch(`/api/admin/voters/${id}`, {
+      const response = await fetch(`/api/admin/voters/${voterToDelete._id}`, {
         // Use the admin API for deletion
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Error deleting voter");
-      console.log("delete");
+      console.log("Voter deleted successfully");
 
-      setVoters(voters.filter((voter) => voter._id !== id));
+      setVoters(voters.filter((voter) => voter._id !== voterToDelete._id));
+      setDeleteDialogOpen(false); // Close dialog after deletion
+      setVoterToDelete(null); // Reset voterToDelete state
     } catch (error) {
       console.error("Failed to delete voter:", error);
     }
@@ -180,7 +193,7 @@ function ManageVoters() {
                           style={{
                             marginLeft: isMobile ? "0" : "10px",
                           }}
-                          onClick={() => handleDelete(voter._id)} // Use _id here
+                          onClick={() => handleDeleteConfirmation(voter)} // Use confirmation handler
                         >
                           Delete
                         </Button>
@@ -252,6 +265,30 @@ function ManageVoters() {
             </Button>
             <Button onClick={handleEditSave} color="primary">
               Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      {voterToDelete && (
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+        >
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            <p>
+              Are you sure you want to delete voter{" "}
+              <strong>{voterToDelete.name}</strong>?
+            </p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleDelete} color="secondary">
+              Delete
             </Button>
           </DialogActions>
         </Dialog>

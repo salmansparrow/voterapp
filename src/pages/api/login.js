@@ -32,6 +32,16 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
+    // Check if the token has been revoked
+    const revokedToken = await db
+      .collection("revokedTokens")
+      .findOne({ userId: user._id });
+    if (revokedToken) {
+      return res
+        .status(401)
+        .json({ message: "Account deleted or token invalid" });
+    }
+
     // Create a JWT token
     const token = jwt.sign(
       { userId: user._id.toString(), email: user.email },

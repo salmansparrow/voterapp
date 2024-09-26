@@ -3,3 +3,9 @@
 @import "./scss/admincreateuser.scss";
 @import "./scss/manageusers.scss";
 @import "./scss/searchvoter.scss";
+
+.textarea {
+  resize: none;
+  //   max-height: 300px;
+  //   min-height: px !important;
+}

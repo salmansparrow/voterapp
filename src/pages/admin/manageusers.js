@@ -1,36 +1,64 @@
 import { useEffect, useState } from "react";
-import { Table, Button, Input, FormGroup, Label, Row, Col } from "reactstrap";
+import {
+  Table,
+  Button,
+  Input,
+  FormGroup,
+  Label,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
 import AdminLayout from "@/components/layout/AdminLayout";
+import { logout } from "@/features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [editUserId, setEditUserId] = useState(null);
   const [editUserEmail, setEditUserEmail] = useState("");
   const [editUserPassword, setEditUserPassword] = useState(""); // State for new password
+  const [userIdToDelete, setUserIdToDelete] = useState(null); // Track user to delete
+  const [modalOpen, setModalOpen] = useState(false); // Track modal state
+  const dispatch = useDispatch();
 
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("/api/users");
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("/api/users");
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
     fetchUsers();
   }, []);
 
-  const handleDelete = async (userId) => {
+  const toggleModal = () => setModalOpen(!modalOpen);
+
+  const confirmDelete = (userId) => {
+    setUserIdToDelete(userId);
+    toggleModal();
+  };
+
+  const handleDelete = async () => {
     try {
-      await fetch(`/api/users/${userId}`, {
-        method: "DELETE",
+      await fetch(`/api/users/${userIdToDelete}`, { method: "DELETE" });
+      fetchUsers();
+      await fetch(`/api/revoke-token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: userIdToDelete }),
       });
-      setUsers(users.filter((user) => user._id !== userId));
+
+      // Assuming the deleted user is the current user, you can logout globally
+      dispatch(logout());
     } catch (error) {
       console.error("Error deleting user:", error);
     }
+    toggleModal(); // Close the modal after deletion
   };
 
   const handleEdit = (user) => {
@@ -140,7 +168,7 @@ const ManageUsers = () => {
                         </Button>
                         <Button
                           color="danger"
-                          onClick={() => handleDelete(user._id)}
+                          onClick={() => confirmDelete(user._id)}
                           className="mb-2 mb-md-0"
                         >
                           Delete
@@ -152,6 +180,20 @@ const ManageUsers = () => {
               ))}
             </tbody>
           </Table>
+
+          {/* Confirmation Modal */}
+          <Modal isOpen={modalOpen} toggle={toggleModal}>
+            <ModalHeader toggle={toggleModal}>Confirm Delete</ModalHeader>
+            <ModalBody>Are you sure you want to delete this user?</ModalBody>
+            <ModalFooter>
+              <Button color="danger" onClick={handleDelete}>
+                Delete
+              </Button>{" "}
+              <Button color="secondary" onClick={toggleModal}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </Modal>
         </div>
       </AdminLayout>
     </>

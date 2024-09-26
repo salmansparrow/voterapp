@@ -9,7 +9,12 @@ export default async function handler(req, res) {
   if (req.method === "PUT") {
     try {
       const { id } = req.query;
-      const updateData = req.body;
+      let updateData = req.body;
+
+      // Remove the _id field from updateData
+      if ("_id" in updateData) {
+        delete updateData["_id"];
+      }
 
       const result = await collection.updateOne(
         { _id: new ObjectId(id) },
@@ -17,7 +22,9 @@ export default async function handler(req, res) {
       );
 
       if (result.modifiedCount === 0) {
-        return res.status(404).json({ error: "Voter not found" });
+        return res
+          .status(404)
+          .json({ error: "Voter not found or no changes made" });
       }
 
       res.status(200).json({ message: "Voter updated successfully" });
@@ -26,6 +33,7 @@ export default async function handler(req, res) {
       res.status(500).json({ error: "Internal Server Error" });
     }
   } else if (req.method === "DELETE") {
+    // ...  delete logic ...
     try {
       const { id } = req.query;
 
