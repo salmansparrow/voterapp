@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import clientPromise from "../../lib/mongodb";
+import clientPromise from "../pages/api/mongodb/mongodb";
 
 export const authenticateUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1]; // Extract token from header

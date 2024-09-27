@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import clientPromise from "../../../lib/mongodb";
+import clientPromise from "./mongodb/mongodb";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

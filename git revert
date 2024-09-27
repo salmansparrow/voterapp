@@ -1,0 +1,17 @@
+[33mcommit 7db4b39d4f1345984137ee4c3904f52484babf02[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: salman <truesalman7@gmail.com>
+Date:   Thu Sep 26 17:55:11 2024 +0500
+
+    user check on submiting data done
+
+[33mcommit 0bbaf35f264afc55b4cf13b1a6ffb221f8a1b2fa[m[33m ([m[1;32mmaster[m[33m)[m
+Author: salman <truesalman7@gmail.com>
+Date:   Thu Sep 19 12:17:24 2024 +0500
+
+    voters fetching done
+
+[33mcommit da4bc860ff6c408868255c320c868b7fd7f5d944[m
+Author: salman <truesalman7@gmail.com>
+Date:   Sun Sep 8 14:49:45 2024 +0500
+
+    Initial commit from Create Next App

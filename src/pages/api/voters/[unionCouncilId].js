@@ -1,4 +1,4 @@
-import clientPromise from "../../../../lib/mongodb";
+import clientPromise from "../mongodb/mongodb";
 import { ObjectId } from "mongodb"; // Import ObjectId to use for finding the UC by its ID
 
 export default async function handler(req, res) {
